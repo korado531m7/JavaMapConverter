@@ -1,6 +1,6 @@
 name: JavaMapConverter
 main: korado531m7\JavaMapConverter\Main
-version: 1.0.3
+version: 1.1.0
 author: korado531m7
 description: Convert blocks of java edition to bedrock edition asynchronously
 api: 3.14.1

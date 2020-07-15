@@ -11,7 +11,7 @@ enable-async-mode: true
 # ----------------------------------------------------------------------------
 
 # Output Mode
-# If you set to true, the progress of conversion will be printed to console like a spamming XD
+# If you set to true, the progress of conversion will be printed on console like a spamming XD
 
 enable-output-progress: false
 

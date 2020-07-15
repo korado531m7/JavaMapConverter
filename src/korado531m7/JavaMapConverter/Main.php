@@ -12,6 +12,7 @@ namespace korado531m7\JavaMapConverter;
 
 use pocketmine\event\level\ChunkLoadEvent;
 use pocketmine\event\Listener;
+use pocketmine\level\Level;
 use pocketmine\plugin\PluginBase;
 
 class Main extends PluginBase implements Listener{
@@ -22,6 +23,8 @@ class Main extends PluginBase implements Listener{
 
     /** @var BlockFixer */
     private $blockFixer;
+    /** @var ChunkConvert[] */
+    private $chunkConverts = [];
 
     public function onEnable(){
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
@@ -33,7 +36,7 @@ class Main extends PluginBase implements Listener{
             $this->getLogger()->warning('Asynchronous mode is disabled. It causes a lag while converting');
         }
         if($this->isOutputProgress()){
-            $this->getLogger()->warning('Output Progress mode is enabled. All converting progress will be print to console.');
+            $this->getLogger()->warning('Output Progress mode is enabled. All converting progress will be print on console.');
         }
         if($this->getServer()->getProperty('ticks-per.autosave', 6000) <= 0){ //6000 is from Server.php
             $this->getLogger()->warning('Autosave is turned off. It may restore from the not converted chunks while converting');
@@ -47,10 +50,21 @@ class Main extends PluginBase implements Listener{
     }
 
     public function onChunkLoad(ChunkLoadEvent $event) : void{
-        $this->blockFixer->fix($event->getChunk());
+        $this->blockFixer->fix($event->getLevel(), $event->getChunk());
         if($this->isOutputProgress()){
             $this->getLogger()->info('Converting Chunk ' . self::getProcessingCount() . '/' . self::getAllCount());
         }
+    }
+
+    public function getConvertedChunk(Level $level) : ChunkConvert{
+        if(!$this->isConvertedChunkExists($level)){
+            $this->chunkConverts[$level->getId()] = new ChunkConvert($level);
+        }
+        return $this->chunkConverts[$level->getId()];
+    }
+
+    public function isConvertedChunkExists(Level $level) : bool{
+        return isset($this->chunkConverts[$level->getId()]);
     }
 
     public function isOutputProgress() : bool{

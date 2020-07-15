@@ -19,4 +19,4 @@ Put your map of java edition to your world folder. Open your server with this pl
 ## Settings
 `enable-async-mode` - If you set to true, blocks conversion will be run asynchronously to reduce lag
 
-`enable-output-progress` - If you set to true, the progress of conversion will be printed to console.
+`enable-output-progress` - If you set to true, the progress of conversion will be printed on console.

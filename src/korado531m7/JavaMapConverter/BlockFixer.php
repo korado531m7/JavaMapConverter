@@ -14,6 +14,7 @@ use korado531m7\JavaMapConverter\data\BlockId;
 use korado531m7\JavaMapConverter\data\Face;
 use korado531m7\JavaMapConverter\task\AsyncConvertTask;
 use pocketmine\level\format\Chunk;
+use pocketmine\level\Level;
 use pocketmine\Player;
 use pocketmine\tile\Sign;
 
@@ -21,26 +22,17 @@ use pocketmine\tile\Sign;
 class BlockFixer{
     /** @var Main */
     private $instance;
-    /** @var bool[][] */
-    private $fixed = [];
 
     public function __construct(Main $instance){
         $this->instance = $instance;
     }
 
-    public function isFixedCoordinates(int $x, int $z) : bool{
-        return isset($this->fixed[$x][$z]);
-    }
-
-    public function pushFixedCoordinates(int $x, int $z) : void{
-        $this->fixed[$x][$z] = true;
-    }
-
-    public function fix(Chunk $chunk) : void{
-        if($this->isFixedCoordinates($chunk->getX(), $chunk->getZ())){
+    public function fix(Level $level, Chunk $chunk) : void{
+        $convertedChunk = $this->instance->getConvertedChunk($level);
+        if($convertedChunk->hasConverted($chunk->getX(), $chunk->getZ())){
             return;
         }
-        $this->pushFixedCoordinates($chunk->getX(), $chunk->getZ());
+        $convertedChunk->addCoordinates($chunk->getX(), $chunk->getZ());
         $this->instance->addProcessing();
 
         if($this->instance->isEnabledRemoveAllEntities()){
@@ -68,7 +60,7 @@ class BlockFixer{
         }
 
         if($this->instance->isAsyncEnabled()){
-            $this->instance->getServer()->getAsyncPool()->submitTask(new AsyncConvertTask($chunk));
+            $this->instance->getServer()->getAsyncPool()->submitTask(new AsyncConvertTask($level, $chunk));
         }else{
             self::convert($chunk);
             $this->instance->subtractProcessing();

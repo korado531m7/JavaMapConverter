@@ -13,14 +13,18 @@ namespace korado531m7\JavaMapConverter\task;
 use korado531m7\JavaMapConverter\BlockFixer;
 use korado531m7\JavaMapConverter\Main;
 use pocketmine\level\format\Chunk;
+use pocketmine\level\Level;
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
 
 class AsyncConvertTask extends AsyncTask{
+    /** @var int */
+    private $levelId;
     /** @var string */
     private $chunk;
 
-    public function __construct(Chunk $chunk){
+    public function __construct(Level $level, Chunk $chunk){
+        $this->levelId = $level->getId();
         $this->chunk = $chunk->fastSerialize();
     }
 
@@ -32,8 +36,11 @@ class AsyncConvertTask extends AsyncTask{
 
     public function onCompletion(Server $server){
         if($this->hasResult()){
-            $chunk = Chunk::fastDeserialize($this->getResult());
-            $server->getDefaultLevel()->setChunk($chunk->getX(), $chunk->getZ(), $chunk, false);
+            $level = $server->getLevel($this->levelId);
+            if(!$level->isClosed()){
+                $chunk = Chunk::fastDeserialize($this->getResult());
+                $level->setChunk($chunk->getX(), $chunk->getZ(), $chunk, false);
+            }
         }
         Main::subtractProcessing();
     }
