@@ -1,7 +1,7 @@
 <?php
 
 /*
- * JavaMapConverter v1.1.1 by korado531m7
+ * JavaMapConverter v1.1.2 by korado531m7
  * Developer: korado531m7
  * Copyright (C) 2020 korado531m7
  * Licensed under MIT (https://github.com/korado531m7/JavaMapConverter/blob/master/LICENSE)
@@ -26,14 +26,12 @@ class Main extends PluginBase implements Listener{
         $this->blockFixer = new BlockFixer($this);
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->getLogger()->alert('This plugin will convert your worlds immediately after player joined the server (chunks were loaded)');
-        if($this->isAsyncEnabled()){
-            $this->getLogger()->info('Asynchronous mode is enabled. Conversion will run asynchronously');
-        }else{
+        if(!$this->isAsyncEnabled()){
             $this->getLogger()->warning('Asynchronous mode is disabled. It causes a lag while converting. Use async mode to get more faster');
         }
-        if($this->isOutputProgress()){
+        /*if($this->isOutputProgress()){
             $this->getLogger()->warning('Output Progress mode is enabled. All converting progress will be print on console.');
-        }
+        }*/
         if($this->getServer()->getProperty('ticks-per.autosave', 6000) <= 0){ //6000 is from Server.php
             $this->getLogger()->warning('Autosave is turned off. It may restore from the not converted chunks while converting');
         }
