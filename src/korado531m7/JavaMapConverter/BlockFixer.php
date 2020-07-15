@@ -1,7 +1,7 @@
 <?php
 
 /*
- * JavaMapConverter v1.1.0 by korado531m7
+ * JavaMapConverter v1.1.1 by korado531m7
  * Developer: korado531m7
  * Copyright (C) 2020 korado531m7
  * Licensed under MIT (https://github.com/korado531m7/JavaMapConverter/blob/master/LICENSE)
@@ -29,11 +29,15 @@ class BlockFixer{
 
     public function fix(Level $level, Chunk $chunk) : void{
         $convertedChunk = $this->instance->getConvertedChunk($level);
-        if($convertedChunk->hasConverted($chunk->getX(), $chunk->getZ())){
+        if($convertedChunk->hasConverted($chunk)){
             return;
         }
-        $convertedChunk->addCoordinates($chunk->getX(), $chunk->getZ());
-        $this->instance->addProcessing();
+        $convertedChunk->addCoordinates($chunk);
+
+        if($this->instance->isOutputProgress()){
+            $convertedChunk->addProgress();
+            $this->instance->getLogger()->info('Converting Blocks in '.$convertedChunk->getLevel()->getName().' at '.$chunk->getX().','.$chunk->getZ().' (Progress '.$convertedChunk->getProgressCurrent().'/'.$convertedChunk->getProgressAll().')');
+        }
 
         if($this->instance->isEnabledRemoveAllEntities()){
             foreach($chunk->getEntities() as $entity){
@@ -63,7 +67,7 @@ class BlockFixer{
             $this->instance->getServer()->getAsyncPool()->submitTask(new AsyncConvertTask($level, $chunk));
         }else{
             self::convert($chunk);
-            $this->instance->subtractProcessing();
+            $convertedChunk->subtractProgress();
         }
     }
 

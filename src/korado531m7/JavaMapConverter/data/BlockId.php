@@ -4,7 +4,7 @@
 namespace korado531m7\JavaMapConverter\data;
 
 /*
- * JavaMapConverter v1.1.0 by korado531m7
+ * JavaMapConverter v1.1.1 by korado531m7
  * Developer: korado531m7
  * Copyright (C) 2020 korado531m7
  * Licensed under MIT (https://github.com/korado531m7/JavaMapConverter/blob/master/LICENSE)

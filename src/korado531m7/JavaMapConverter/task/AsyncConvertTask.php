@@ -1,7 +1,7 @@
 <?php
 
 /*
- * JavaMapConverter v1.1.0 by korado531m7
+ * JavaMapConverter v1.1.1 by korado531m7
  * Developer: korado531m7
  * Copyright (C) 2020 korado531m7
  * Licensed under MIT (https://github.com/korado531m7/JavaMapConverter/blob/master/LICENSE)
@@ -41,7 +41,10 @@ class AsyncConvertTask extends AsyncTask{
                 $chunk = Chunk::fastDeserialize($this->getResult());
                 $level->setChunk($chunk->getX(), $chunk->getZ(), $chunk, false);
             }
+            $pl = $server->getPluginManager()->getPlugin('JavaMapConverter');
+            if($pl instanceof Main){
+                $pl->getConvertedChunk($level)->subtractProgress();
+            }
         }
-        Main::subtractProcessing();
     }
 }
