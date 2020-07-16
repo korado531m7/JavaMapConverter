@@ -1,7 +1,7 @@
 <?php
 
 /*
- * JavaMapConverter v1.1.2 by korado531m7
+ * JavaMapConverter v1.1.3 by korado531m7
  * Developer: korado531m7
  * Copyright (C) 2020 korado531m7
  * Licensed under MIT (https://github.com/korado531m7/JavaMapConverter/blob/master/LICENSE)
@@ -17,6 +17,7 @@ use pocketmine\level\format\Chunk;
 use pocketmine\level\Level;
 use pocketmine\Player;
 use pocketmine\tile\Sign;
+use pocketmine\utils\TextFormat;
 
 
 class BlockFixer{
@@ -51,14 +52,8 @@ class BlockFixer{
             foreach($chunk->getTiles() as $tile){
                 if($tile instanceof Sign){
                     $texts = $tile->getText();
-                    $rawLine1 = @json_decode($texts[0], true);
-                    $rawLine2 = @json_decode($texts[1], true);
-                    $rawLine3 = @json_decode($texts[2], true);
-                    $rawLine4 = @json_decode($texts[3], true);
-                    if(is_array($rawLine1) && is_array($rawLine2) && is_array($rawLine3) && is_array($rawLine4)){
-                        $tile->setText($rawLine1['text'] ?? '', $rawLine2['text'] ?? '', $rawLine3['text'] ?? '', $rawLine4['text'] ?? '');
-                        $tile->saveNBT();
-                    }
+                    $tile->setText($this->getSignText($texts[0]), $this->getSignText($texts[1]), $this->getSignText($texts[2]), $this->getSignText($texts[3]));
+                    $tile->saveNBT();
                 }
             }
         }
@@ -69,6 +64,71 @@ class BlockFixer{
             self::convert($chunk);
             $convertedChunk->subtractProgress();
         }
+    }
+
+    private function getSignText(string $text) : string {
+        $json = @json_decode($text, true);
+        if($json === null){
+            return json_encode(['text' => $text]);
+        }
+
+        $extra = $json['extra'][0] ?? null;
+        $raw = $json['text'] ?? null;
+
+        if($extra === null && $raw === null){
+            return '';
+        }elseif($extra === null){
+            return $raw ?? '';
+        }else{
+            $res = '';
+            if($extra['bold'] ?? false){
+                $res .= TextFormat::BOLD;
+            }
+            if($extra['italic'] ?? false){
+                $res .= TextFormat::ITALIC;
+            }
+            //TODO: Check more formats
+            $res .= $this->getSignColor($extra['color'] ?? '');
+            return $res . ($extra['text'] ?? '');
+        }
+    }
+
+    private function getSignColor(string $color) : string{
+        switch($color){
+            case 'black':
+                return TextFormat::BLACK;
+            case 'dark_blue':
+                return TextFormat::DARK_BLUE;
+            case 'dark_green':
+                return TextFormat::DARK_GREEN;
+            case 'dark_aqua':
+                return TextFormat::DARK_AQUA;
+            case 'dark_red':
+                return TextFormat::DARK_RED;
+            case 'dark_purple':
+                return TextFormat::DARK_PURPLE;
+            case 'gold':
+                return TextFormat::GOLD;
+            case 'gray':
+                return TextFormat::GRAY;
+            case 'dark_gray':
+                return TextFormat::DARK_GRAY;
+            case 'blue':
+                return TextFormat::BLUE;
+            case 'green':
+                return TextFormat::GREEN;
+            case 'aqua':
+                return TextFormat::AQUA;
+            case 'red':
+                return TextFormat::RED;
+            case 'light_purple':
+                return TextFormat::LIGHT_PURPLE;
+            case 'yellow':
+                return TextFormat::YELLOW;
+            case 'white':
+                return TextFormat::WHITE;
+        }
+        return '';
     }
 
     public static function convert(Chunk $chunk) : void{
