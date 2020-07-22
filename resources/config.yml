@@ -4,7 +4,7 @@
 # ----------------------------------------------------------------------------
 
 # Asynchronous Mode
-# If you set to true, blocks conversion will be run asynchronously to reduce lag
+# If you set to true, blocks conversion will be run asynchronously (faster)
 
 enable-async-mode: true
 
@@ -23,8 +23,32 @@ enable-convert-sign: true
 
 # ----------------------------------------------------------------------------
 
+# Convert Sign to Java Edition
+# If set to true, sign text in raw (not json) will be converted to json text
+convert-sign-java: true
+
+# ----------------------------------------------------------------------------
+
+# Force Save Sign
+# After converted the text in sign, their tile data will be saved immediately (enable-convert-sign must be true)
+force-save-sign: true
+
+# ----------------------------------------------------------------------------
+
+# Reset Tiles
+# Tile data will be reset (not including sign)
+reset-all-tiles: false
+
+# ----------------------------------------------------------------------------
+
 # Remove Entities
 # If set to true, entities in chunks are removed
 remove-all-entities: true
+
+# ----------------------------------------------------------------------------
+
+# Export Logs
+# Conversion logs will be exported to plugin folder when server stopped
+export-all-logs: false
 
 # ----------------------------------------------------------------------------

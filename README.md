@@ -20,3 +20,11 @@ Put your map of java edition to your world folder. Open your server with this pl
 `enable-async-mode` - If you set to true, blocks conversion will be run asynchronously to reduce lag
 
 `enable-output-progress` - If you set to true, the progress of conversion will be printed on console.
+
+`enable-convert-sign` - If you set to true, texts in json format written in sign will be converted
+
+`convert-sign-java` - If you set to true, sign text in raw text (not json) will be converted to json text
+
+`remove-all-entities` - If you set to true, entities in chunks are removed
+
+`export-all-logs` - If you set to true, conversion logs will be exported to plugin folder when server stopped
