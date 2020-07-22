@@ -83,7 +83,7 @@ class ChunkConvert{
         $folder = $this->level->getFolderName();
 
         $complete = $this->all - $this->progress;
-        $label = "[$name]" . ($folder === $name ? '' : " ($folder)");
+        $label = $name . ($folder === $name ? '' : " ($folder)");
 
         return "[$label] Tried Chunks: $this->all, Completed: $complete, In Progress: $this->progress, Tried Blocks: $this->blocksAll (Affected: $this->blocksDiff), Affected Signs: $this->signs, Affected Tiles: $this->tiles\n";
     }
